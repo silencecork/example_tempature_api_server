@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Highcharts Example</title>
+
+		<script type="text/javascript" src="http://libs.useso.com/js/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $.ajax({
+                    url: 'http://localhost:5000/api/queryDataPoint?limit=10',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response, textStatus, xhr) {
+                        console.log('success');
+                        var categoriesAry = [];
+                        var valueAry = [];
+                        for (var i in response) {
+                            var record = response[i];
+                            categoriesAry.push(record.time + '');
+                            valueAry.push(parseFloat(record.value));
+                        }
+
+
+                        $(function () {
+                            $('#container').highcharts({
+                                title: {
+                                    text: 'DHT-11 Temperature History',
+                                    x: -20 //center
+                                },
+                                subtitle: {
+                                    text: 'Source: DHT-11 Sensor',
+                                    x: -20
+                                },
+                                xAxis: {
+                                    categories: categoriesAry
+                                },
+                                yAxis: {
+                                    title: {
+                                        text: 'Temperature (°C)'
+                                    },
+                                    plotLines: [{
+                                        value: 0,
+                                        width: 1,
+                                        color: '#808080'
+                                    }]
+                                },
+                                tooltip: {
+                                    valueSuffix: '°C'
+                                },
+                                legend: {
+                                    layout: 'vertical',
+                                    align: 'right',
+                                    verticalAlign: 'middle',
+                                    borderWidth: 0
+                                },
+                                series: [{
+                                    name: 'DHT-11',
+                                    data: valueAry
+                                }]
+                            });
+                        });
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error in Database');
+                    }
+                });
+            });
+        </script>
+	</head>
+	<body>
+<script src="./js/highcharts.js"></script>
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+	</body>
+</html>
