@@ -1,6 +1,7 @@
 var express = require('express');
 var mongodb = require('mongodb');
 var moment = require('moment');
+var _ = require('lodash');
 
 var uri = 'mongodb://abcde:12345@ds045011.mongolab.com:45011/sensor-statistic';
 
@@ -11,6 +12,22 @@ mongodb.MongoClient.connect(uri, function(err, db) {
 		console.log('connect mongo db success');
 		var app = express();
 
+		function allowCrossDomain(req, res, next) {
+		  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+
+		  var origin = req.headers.origin;
+		  if (_.contains(app.get('allowed_origins'), origin)) {
+		    res.setHeader('Access-Control-Allow-Origin', origin);
+		  }
+
+		  if (req.method === 'OPTIONS') {
+		    res.send(200);
+		  } else {
+		    next();
+		  }
+		}
+
+		app.use(allowCrossDomain);
 		app.use(express.static(__dirname + '/public'));
 
 		app.get('/api/createDataPoint', function(request, response) {

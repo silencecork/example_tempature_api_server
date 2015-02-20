@@ -7,6 +7,7 @@
     "ejs"        : "*",
     "ejs-locals" : "*",
     "mongodb"   : "*",
-    "moment" 	: "*"
+    "moment" 	: "*",
+    "lodash"  : "latest"
   }
 }
