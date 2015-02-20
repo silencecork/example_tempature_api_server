@@ -8,7 +8,7 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $.ajax({
-                    url: 'http://localhost:5000/api/queryDataPoint?limit=10',
+                    url: 'http://example-tempature-api-server.herokuapp.com/api/queryDataPoint?limit=10',
                     type: 'GET',
                     dataType: 'json',
                     success: function (response, textStatus, xhr) {
