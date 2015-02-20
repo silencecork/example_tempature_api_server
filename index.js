@@ -2,7 +2,7 @@ var express = require('express');
 var mongodb = require('mongodb');
 var moment = require('moment');
 
-var uri = 'mongodb://liu71101:2ilxldau@ds045011.mongolab.com:45011/sensor-statistic';
+var uri = 'mongodb://abcde:12345@ds045011.mongolab.com:45011/sensor-statistic';
 
 mongodb.MongoClient.connect(uri, function(err, db) {
 	if (err) {
