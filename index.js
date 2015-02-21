@@ -12,28 +12,12 @@ mongodb.MongoClient.connect(uri, function(err, db) {
 		console.log('connect mongo db success');
 		var app = express();
 
-		function allowCrossDomain(req, res, next) {
-		  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-
-		  var origin = req.headers.origin;
-		  if (_.contains(app.get('allowed_origins'), origin)) {
-		    res.setHeader('Access-Control-Allow-Origin', origin);
-		  }
-
-		  if (req.method === 'OPTIONS') {
-		    res.send(200);
-		  } else {
-		    next();
-		  }
-		}
-
 		app.use(function(req, res, next) {
 		  res.header("Access-Control-Allow-Origin", "*");
 		  res.header("Access-Control-Allow-Headers", "X-Requested-With");
 		  next();
 		});
 
-		//app.use(allowCrossDomain);
 		app.use(express.static(__dirname + '/public'));
 
 		app.get('/api/createDataPoint', function(request, response) {
