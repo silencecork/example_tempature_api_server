@@ -27,7 +27,13 @@ mongodb.MongoClient.connect(uri, function(err, db) {
 		  }
 		}
 
-		app.use(allowCrossDomain);
+		app.use(function(req, res, next) {
+		  res.header("Access-Control-Allow-Origin", "*");
+		  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+		  next();
+		});
+
+		//app.use(allowCrossDomain);
 		app.use(express.static(__dirname + '/public'));
 
 		app.get('/api/createDataPoint', function(request, response) {
@@ -49,6 +55,7 @@ mongodb.MongoClient.connect(uri, function(err, db) {
 				if (err) {
 					__sendErrorResponse(response, 406, err);
 				} else {
+					response.type('application/json');
 					response.status(200).send(result);
 					response.end();
 				}
@@ -65,6 +72,7 @@ mongodb.MongoClient.connect(uri, function(err, db) {
 					console.log(err);
 					__sendErrorResponse(response, 406, err);
 				} else {
+					response.type('application/json');
 					response.status(200).send(docs);
 					response.end();
 				}
