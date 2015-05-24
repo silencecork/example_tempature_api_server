@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Highcharts Example</title>
+
+		<script type="text/javascript" src="http://libs.useso.com/js/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript">
+            var api = 'http://example-tempature-api-server.herokuapp.com/api/queryDataPoint?limit=10';
+            var singleapi = 'http://example-tempature-api-server.herokuapp.com/api/queryDataPoint?limit=1';
+            var currentCount = 0;
+            $(document).ready(function () {
+                $.ajax({
+                    url: api,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response, textStatus, xhr) {
+                        console.log('success');
+                        var categoriesAry = [];
+                        var valueAry = [];
+                        for (var i in response) {
+                            var record = response[i];
+                            valueAry.push([i, parseFloat(record.value)]);
+                            currentCount = i;
+                        }
+
+
+                        $(__charts);
+
+                        function __charts() {
+                            console.log('call charts');
+                            $('#container').highcharts({
+	                            chart : {
+								            events : {
+								                load : function () {
+													console.log('loads');
+								                    // set up the updating of the chart each second
+								                    var series = this.series[0];
+								                    setInterval(function () {
+								                    	$.ajax({
+								                    		url: singleapi,
+										                    type: 'GET',
+										                    dataType: 'json',
+										                    success: function (response, textStatus, xhr) {
+										                    	for (var i in response) {
+										                            var record = response[i];
+										                            series.addPoint([++currentCount, parseFloat(record.value)], true, true);
+										                        }
+										                    },
+										                    error: function (xhr, textStatus, errorThrown) {
+										                    }
+								                    	})
+								                    }, 5000);
+								                }
+								            }
+								        },
+                                title: {
+                                    text: 'DHT-11 Temperature History',
+                                    x: -20 //center
+                                },
+                                subtitle: {
+                                    text: 'Source: DHT-11 Sensor',
+                                    x: -20
+                                },
+                                tooltip: {
+                                    valueSuffix: '°C'
+                                },
+                                legend: {
+                                    layout: 'vertical',
+                                    align: 'right',
+                                    verticalAlign: 'middle',
+                                    borderWidth: 0
+                                },
+                                series: [{
+                                    name: 'DHT-11',
+                                    data: valueAry
+                                }]
+                            });
+                            //setTimeout(__charts, 10000);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log('Error in Database');
+                    }
+                });
+            });
+        </script>
+	</head>
+	<body>
+<script src="./js/highcharts.js"></script>
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+	<body>
+    </body>
+</html>
